@@ -1,25 +1,45 @@
 {
-	"name": "numerology_tools",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-check --tsconfig ./tsconfig.json"
-	},
-	"devDependencies": {
-		"@sveltejs/vite-plugin-svelte": "^1.0.2",
-		"@tsconfig/svelte": "^3.0.0",
-		"svelte": "^3.49.0",
-		"svelte-check": "^2.8.1",
-		"svelte-preprocess": "^4.10.7",
-		"tslib": "^2.4.0",
-		"typescript": "^4.6.4",
-		"vite": "^3.1.0"
-	},
-	"dependencies": {
-		"fp-ts": "^2.12.3"
-	}
+  "name": "numerology_tools",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.0.1",
+    "@tsconfig/svelte": "^3.0.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.19",
+    "svelte": "^3.54.0",
+    "svelte-check": "^2.10.2",
+    "svelte-preprocess": "^5.0.0",
+    "tailwindcss": "^3.2.4",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "@iconify/json": "^2.1.150",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "date-fns": "^2.29.3",
+    "date-picker-svelte": "^2.2.4",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "eslint-plugin-unicorn": "^45.0.1",
+    "fp-ts": "^2.13.1",
+    "fp-ts-std": "^0.15.1",
+    "prettier-plugin-tailwindcss": "^0.2.1",
+    "ts-essentials": "^9.3.0",
+    "vitest": "^0.25.7"
+  },
+  "quokka": {
+    "stdEsm": false,
+    "nativeEsm": true
+  }
 }
