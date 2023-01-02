@@ -2,6 +2,7 @@
   export let name: string
   export let id: string | undefined = undefined
   export let value: string | undefined = undefined
+  export let placeholder: string | undefined = undefined
   export let maxWidth = "100%"
 </script>
 
@@ -12,9 +13,10 @@
     type="text"
     {name}
     {id}
+    {placeholder}
     bind:value
     class="
-      _shadow h-8 border-2 border-solid border-stone-500
+      _shadow h-10 border-2 border-solid border-stone-500
       bg-stone-100 px-2 transition-shadow focus:border-stone-900
       focus:outline-none
       "
