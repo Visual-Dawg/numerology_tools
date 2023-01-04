@@ -68,7 +68,7 @@ function filterVowels(string: string): string {
  * @example "Arr Foo Bar" => "rr F Br"
  */
 function filterConsonants(string: string): string {
-  return string.replace(vowelRegex, "")
+  return string.replace(vowelRegex, "").replace(/[^\sa-z]/gi, "")
 }
 
 /**
@@ -235,6 +235,8 @@ if (import.meta.vitest) {
         ["Uppercase",     "rayAmond", "ayAo"],
         ["Space",         "ray Amond", "ay Ao"],
         ["Two spaces",    "ray Amond er", "ay Ao e"],
+        ["Numbers",       "123abc", "a"],
+        ["Special characters", ":-O", "O"],
       ]
     )("%s - %s => %s", (_name, input, expected) => {
       expect(filterVowels(input), `String "${input}"\n`).toEqual(expected)
@@ -249,6 +251,8 @@ if (import.meta.vitest) {
         ["Y as consonant",  "tyuu",   "ty"],
         ["Y as vowel",      "hayde",  "hd"],
         ["space",           "hay de", "h d"],
+        ["numbers",         "C00L",   "CL"],
+        ["special characters", ":-D",  "D"],
       ]
     )("%s - %s => %s", (_name, input, expected) => {
       expect(filterConsonants(input), `String "${input}"\n`).toEqual(expected)
