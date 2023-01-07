@@ -12,6 +12,7 @@ const defaultRules = {
   "import/order": "off",
   "unicorn/prefer-module": "off",
   "no-use-before-define": "off",
+  "no-undef": "off",
   "unicorn/no-array-callback-reference": "off",
   "unicorn/no-array-reduce": "off",
   "unicorn/no-useless-undefined": "off",
@@ -42,8 +43,8 @@ module.exports = {
   root: true,
   env: {
     es2021: true,
-    node: true,
-    browser: false,
+    node: false,
+    browser: true,
   },
   extends: [
     "eslint:recommended",
