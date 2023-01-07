@@ -4,6 +4,7 @@ import { map, reduce } from "fp-ts/lib/ReadonlyNonEmptyArray.js"
 import { reduceNumber, sumUpNumbers } from "./Pures.js"
 
 import type { ICalculatedDate } from "#types/Types"
+import { eachDayOfInterval } from "date-fns"
 
 export function calculateDate(date: Date): ICalculatedDate {
   return {
@@ -42,17 +43,52 @@ function reduceNumbers(numbers: readonly number[]): number {
 }
 
 function getYearMontAndhDay(date: Date): readonly [number, number, number] {
-  return [date.getFullYear(), date.getMonth() + 1, date.getDate()] as const
+  return [date.getFullYear(), getMonth(date), date.getDate()] as const
 }
 
 function getMonthAndDay(date: Date): readonly [number, number] {
-  return [date.getMonth() + 1, date.getDate()] as const
+  return [getMonth(date), date.getDate()] as const
 }
 
-// TODO Add get dates with certain number(s) from a picked range
-// function calculateDateRange(
-//   start: Date,
-//   end: Date
-// ): readonly ICalculatedDate[] {
-//   return eachDayOfInterval({ start, end }).map(calculateDate)
-// }
+/**
+ * Like `date.getMonth()` but increments the result by one, as the month is 0 indexed by default.
+ */
+function getMonth(date: Date): number {
+  return date.getMonth() + 1
+}
+
+/**
+ * Take a start and end date and calculated the values for the whole range.
+ *
+ * @param start The date to start from, inclusive
+ * @param end The date to end, inclusive
+ */
+export function calculateDateRange(
+  start: Date,
+  end: Date
+): readonly ICalculatedDate[] {
+  return eachDayOfInterval({ start, end }).map(calculateDate)
+}
+if (import.meta.vitest) {
+  const { test, expect, describe } = import.meta.vitest
+
+  describe("lifePath", () => {
+    test.each([
+      [new Date(1990, 0, 1), 3],
+      [new Date(2000, 1, 2), 6],
+      [new Date(2023, 11, 10), 11],
+    ])(`%s`, (input, expectedValue) => {
+      expect(calculateLifepath(input)).toEqual(expectedValue)
+    })
+  })
+
+  describe("reduceNumber", () => {
+    test.each([
+      [39, 3],
+      [111_111, 6],
+      [2884, 22],
+    ])(`%i`, (input, expectedValue) => {
+      expect(reduceNumber(input)).toEqual(expectedValue)
+    })
+  })
+}

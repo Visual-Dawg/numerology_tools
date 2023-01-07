@@ -1,10 +1,11 @@
 <script lang="ts">
-  import Number from "#/atoms/Number.svelte"
-  import TextInput from "#/atoms/TextInput.svelte"
+  import Number from "#/components/atoms/Number.svelte"
+  import TextInput from "#/components/atoms/TextInput.svelte"
   import { calculateDate } from "#/lib/DateCalculations"
   import { calculateName } from "#/lib/NameCalculations"
   import { calculateMaturity } from "#/lib/Pures"
   import { DateInput } from "date-picker-svelte"
+  import ColoredBackground from "../atoms/ColoredBackground.svelte"
 
   let birthdate: Date
   let name: string
@@ -18,11 +19,11 @@
 </script>
 
 <!-- grid-cols-12 grid-rows-1 -->
-<div class="grid _grid-layout  gap-6 w-full mt-60">
+<div class="grid _grid-layout gap-6 w-full h-full pt-40">
   <!-- Inputs -->
   <div class="col-start-2 col-end-6 w-full xl:col-end-7">
-    <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl">
-      Calculate your personal numbers
+    <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
+      Calculate numerological numbers
     </h1>
 
     <div class="flex flex-col gap-6">
@@ -55,8 +56,16 @@
       <div class="mb-1 text-sm">Name numbers</div>
       <div class="grid grid-cols-2 gap-4">
         <Number name="Expresison" number={nameNumbers?.expression} />
-        <Number name="Soul Urge" number={nameNumbers?.soulUrge} />
-        <Number name="Personality" number={nameNumbers?.personality} />
+        <Number
+          name="Soul Urge"
+          number={nameNumbers?.soulUrge}
+          onUncalculatedMessage="Name needs vowels for this number to be calculated"
+        />
+        <Number
+          name="Personality"
+          number={nameNumbers?.personality}
+          onUncalculatedMessage="The name needs consonants for this number to be calculated"
+        />
       </div>
     </div>
 
@@ -71,33 +80,20 @@
     </div>
 
     <div class="mt-6">
-      <Number name="Maturity" number={maturity} />
+      <Number
+        name="Maturity"
+        number={maturity}
+        onUncalculatedMessage="The name and birthdate need to be specified"
+      />
     </div>
   </div>
 </div>
 
-<div class="_bg" />
+<ColoredBackground />
 
 <style lang="postcss">
   ._grid-layout {
     grid-template-rows: repeat(1, 1fr);
     grid-template-columns: repeat(12, 1fr);
-  }
-
-  ._bg {
-    background-color: theme(colors.stone.100);
-    position: absolute;
-    height: 100vh;
-    top: 0px;
-    left: 0px;
-    z-index: -999;
-
-    /* Use 5 collums of the 12 as width + all space to the left 
-      Max-width is set to 1600px
-    */
-    width: calc(
-      ((min(100vw, 1600px) - 11 * 24px) / 12 * 5 + 24px * 5) +
-        max(0px, (100vw - 1600px) / 2)
-    );
   }
 </style>

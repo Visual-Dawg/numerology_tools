@@ -17,8 +17,8 @@
     bind:value
     class="
       _shadow h-10 border-2 border-solid border-stone-500
-      bg-stone-100 px-2 transition-shadow focus:border-stone-900
-      focus:outline-none
+      bg-stone-100 px-2 transition-shadow
+      focus:border-amber-800 focus:outline-none
       "
     style={`max-width: ${maxWidth}`}
   />

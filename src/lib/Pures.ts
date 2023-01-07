@@ -53,6 +53,9 @@ export function sumUpStringedNumbers(
   return total + Number(letterToAdd)
 }
 
+/**
+ * Like {@link reduceNumber} but does also reduce master numbers.
+ */
 export function reduceNumberIgnoreMasters(number: number): number {
   if (Number.isNaN(number)) throw new Error(`Invalid number: ${number}`)
 
@@ -61,6 +64,21 @@ export function reduceNumberIgnoreMasters(number: number): number {
   const added = [...String(number)].reduce(sumUpStringedNumbers, 0)
 
   return reduceNumberIgnoreMasters(added)
+}
+
+/**
+ * Split an array into smaller parts.
+ * @example {
+ * chunkArray( [1, 2, 3, 4], 2) //=> [ [1,2] , [3, 4] ]
+ * }
+ */
+export function chunkArray<T>(
+  array: readonly T[],
+  size: number
+): readonly T[][] {
+  return Array.from({ length: Math.ceil(array.length / size) }).map(
+    (_, index) => array.slice(index * size, index * size + size)
+  )
 }
 
 if (import.meta.vitest) {

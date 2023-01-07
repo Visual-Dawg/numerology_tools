@@ -12,8 +12,21 @@
     format("truetype-variations");
 }
 
+::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-stone-900/5; /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: theme(colors.stone.400); /* color of the scroll thumb */
+  border-radius: 0px; /* roundness of the scroll thumb */
+}
+
 body {
-  @apply bg-stone-50 font-serif text-stone-800;
+  @apply bg-stone-100 font-serif text-stone-800;
 }
 
 /* Override date picker styling */
@@ -21,12 +34,14 @@ body {
   .date-time-picker {
     border-radius: 0px !important;
     border: 1px solid theme(colors.stone.400) !important;
-    box-shadow: 8px 8px 0px theme(colors.stone.200) !important;
+    @apply shadow-md shadow-orange-900/10 !important;
+    box-shadow: 8px 8px 0px black;
   }
 
   select,
   input,
-  .selected {
+  .selected,
+  .cell {
     border-radius: 0px !important;
   }
 
@@ -36,18 +51,34 @@ body {
     border: 2px solid theme(colors.stone.500) !important;
     box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1) !important;
     height: 2.5rem;
+    background-color: theme(colors.stone.100) !important;
 
     &:focus {
-      border-color: theme(colors.stone.900) !important;
+      border-color: theme(colors.amber.800) !important;
       box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    &::placeholder {
+      color: theme(colors.stone.400) !important;
     }
   }
 }
 
 :root {
   --date-picker-foreground: theme(colors.stone.800);
-  --date-picker-background: theme(colors.stone.100);
+  --date-picker-background: theme(colors.amber.100);
   --date-picker-selected-background: theme(colors.stone.50);
   --date-picker-highlight-border: theme(colors.stone.900);
   --date-picker-highlight-shadow: "none";
+}
+
+.tippy-box {
+  @apply shadow shadow-stone-900/10;
+  background-color: theme(colors.white);
+  padding: 0.5rem 1rem;
+  border: 2px solid theme(colors.stone.400);
+}
+
+.tippy-content {
+  font-size: 0.875rem;
 }

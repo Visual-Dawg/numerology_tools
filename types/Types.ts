@@ -1,24 +1,38 @@
 export type ICalculatedPerson = ICalculatedName & ICalculatedDate
 
-export type IAllNumbers = Readonly<IBirthNumbers & INameNumbers & maturity>
+export type IAllNumbers = Readonly<IBirthNumbers & INameNumbers & Maturity>
 
-export type ICalculatedDate = IBirthNumbers & birthdate
+export type ICalculatedDate = IBirthNumbers & DateObject
 
-export type ICalculatedName = INameNumbers & name
+export type ICalculatedName = INameNumbers & Name
 
 export type IBirthNumbers = Readonly<
-  lifePath & attitude & generation & dayOfBirth
+  LifePath & Attitude & Generation & DayOfBirth
 >
 
-export type INameNumbers = Readonly<expression & soulUrge & personality>
+export type INameNumbers = Readonly<Expression & SoulUrge & Personality>
 
-type lifePath = { readonly lifePath: number }
-type generation = { readonly generation: number }
-type attitude = { readonly attitude: number }
-type dayOfBirth = { readonly dayOfBirth: number }
-type expression = { readonly expression: number }
-type soulUrge = { readonly soulUrge: number }
-type personality = { readonly personality: number }
-type maturity = { readonly maturity: number }
-type birthdate = { readonly date: Date }
-type name = { readonly name: string }
+type LifePath = { readonly lifePath: number }
+type Generation = { readonly generation: number }
+type Attitude = { readonly attitude: number }
+type DayOfBirth = { readonly dayOfBirth: number }
+type Expression = { readonly expression: number }
+type SoulUrge = { readonly soulUrge: number }
+type Personality = { readonly personality: number }
+type Maturity = { readonly maturity: number }
+type DateObject = { readonly date: Date }
+type Name = { readonly name: string }
+
+export type IFindDateArgument = Readonly<{
+  type: "FIND_DATE"
+  id: string
+  selectedLifepaths: readonly number[]
+  start: Date
+  end: Date
+}>
+
+export type IFindDateResult = Readonly<{
+  type: "FIND_DATE_RESULT"
+  id: string
+  result: readonly ICalculatedDate[]
+}>
