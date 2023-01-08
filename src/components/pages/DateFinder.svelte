@@ -15,14 +15,14 @@
   const createUID = hexoid()
 
   let startDate: Date | undefined = new Date()
-  let endDate: Date | undefined = add(startDate, { weeks: 1, years: 40 })
-  let selectedLifepaths: number[] | undefined = [1]
+  let endDate: Date | undefined = add(startDate, { weeks: 1 })
+  let selectedLifepaths: number[] = []
 
   let foundDates: readonly ICalculatedDate[] | undefined = undefined
 
   let minEndDate: Date = add(startDate, { days: 1 })
 
-  $: isFormValid = startDate && endDate && selectedLifepaths
+  $: isFormValid = startDate && endDate && selectedLifepaths.length > 0
   $: {
     // Do not allow end date to be before the start date
     if (startDate > endDate) {
@@ -78,7 +78,9 @@
       gridHeight = getListHeight(list)
     }, 1)
 
-    return { destroy: () => clearTimeout(timeout) }
+    return {
+      destroy: () => clearTimeout(timeout),
+    }
   }
 
   let resizeTimeout: NodeJS.Timeout
@@ -93,13 +95,12 @@
   }
 
   function getListHeight(list: HTMLElement | undefined) {
-    return Math.min(
+    return (
       window.innerHeight -
-        list.getBoundingClientRect().top -
-        FOOTER_SIZE -
-        // Spacing
-        24,
-      itemHeight * (foundDates.length / rowColumns)
+      list.getBoundingClientRect().top -
+      FOOTER_SIZE -
+      // Spacing
+      24
     )
   }
 </script>
@@ -171,7 +172,7 @@
   <div
     class="col-span-7 col-start-6 mt-14 flex flex-col items-center xl:col-start-7"
   >
-    {#if isFormValid && foundDates?.length !== undefined}
+    {#if isFormValid && foundDates?.length !== 0}
       <div class="mb-8">
         <h2 class="mb-1 text-2xl">
           {#if foundDates}
