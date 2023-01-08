@@ -19,7 +19,7 @@
 </script>
 
 <!-- grid-cols-12 grid-rows-1 -->
-<div class="grid _grid-layout gap-6 w-full h-full pt-40">
+<div class="_grid-layout grid h-full w-full grow gap-6 pt-40">
   <!-- Inputs -->
   <div class="col-start-2 col-end-6 w-full xl:col-end-7">
     <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
@@ -51,7 +51,7 @@
   </div>
 
   <!-- Numbers Display-->
-  <div class="col-span-4 col-start-6 xl:col-start-7 mt-14">
+  <div class="col-span-4 col-start-6 mt-14 xl:col-start-7">
     <div class="mb-8">
       <div class="mb-1 text-sm">Name numbers</div>
       <div class="grid grid-cols-2 gap-4">
