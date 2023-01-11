@@ -12,6 +12,10 @@
     format("truetype-variations");
 }
 
+::selection {
+  @apply bg-orange-300;
+}
+
 ::-webkit-scrollbar {
   width: 12px; /* width of the entire scrollbar */
 }
@@ -23,6 +27,16 @@
 ::-webkit-scrollbar-thumb {
   background-color: theme(colors.stone.400); /* color of the scroll thumb */
   border-radius: 0px; /* roundness of the scroll thumb */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  &:focus {
+    outline: rgba(0, 0, 0, 0.01) solid 1px;
+  }
 }
 
 body {
