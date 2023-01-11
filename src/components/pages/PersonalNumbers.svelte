@@ -19,9 +19,14 @@
 </script>
 
 <!-- grid-cols-12 grid-rows-1 -->
-<div class="_grid-layout grid h-full w-full grow gap-6 pt-40">
+<div
+  class="_grid-layout flex h-full w-full grow flex-col flex-wrap items-center justify-start gap-10 pt-40 md:grid md:flex-row md:items-start lg:gap-6"
+>
+  <!-- Left side -->
   <!-- Inputs -->
-  <div class="col-start-2 col-end-6 w-full xl:col-end-7">
+  <div
+    class="col-start-2 col-end-6 max-h-min max-w-min lg:max-w-max  xl:col-end-7"
+  >
     <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
       Calculate numerological numbers
     </h1>
@@ -50,11 +55,12 @@
     </div>
   </div>
 
+  <!-- Right side -->
   <!-- Numbers Display-->
-  <div class="col-span-4 col-start-6 mt-14 xl:col-start-7">
+  <div class="col-span-4 col-start-6 mt-14 md:col-span-6 md:col-start-7">
     <div class="mb-8">
       <div class="mb-1 text-sm">Name numbers</div>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid max-w-xs grid-cols-2 gap-4">
         <Number name="Expresison" number={nameNumbers?.expression} />
         <Number
           name="Soul Urge"
@@ -71,7 +77,7 @@
 
     <div class="">
       <div class="mb-1 text-sm">Birth date numbers</div>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid max-w-xs grid-cols-2 gap-4">
         <Number name="Life Path" number={dateNumbers?.lifePath} />
         <Number name="Attitude" number={dateNumbers?.attitude} />
         <Number name="Generation" number={dateNumbers?.generation} />

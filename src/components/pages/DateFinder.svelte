@@ -7,7 +7,11 @@
   import ColoredBackground from "../atoms/ColoredBackground.svelte"
   import { isFindDateResult } from "./DateFinderHelper"
   import VirtualList from "svelte-tiny-virtual-list"
-  import { dateFormatter, numberFormatter } from "#/lib/Helper"
+  import {
+    formatDateShort,
+    formatListDisjunction,
+    formatNumber,
+  } from "#/lib/Helper"
 
   const worker = new Worker(new URL("DateFinderWorker", import.meta.url), {
     type: "module",
@@ -22,7 +26,11 @@
 
   let minEndDate: Date = add(startDate, { days: 1 })
 
-  $: isFormValid = startDate && endDate && selectedLifepaths.length > 0
+  $: isFormValid =
+    startDate &&
+    endDate &&
+    foundDates !== undefined &&
+    selectedLifepaths.length > 0
   $: {
     // Do not allow end date to be before the start date
     if (startDate > endDate) {
@@ -57,7 +65,7 @@
   })
 
   const itemHeight = 32
-  const itemWidth = 136
+  const itemWidth = 148
 
   let gridWidth: number
   let gridElement: HTMLElement | undefined
@@ -65,10 +73,12 @@
   let gridHeight = 0
 
   $: rowColumns =
-    foundDates?.length <= 3
-      ? foundDates.length
+    gridWidth < itemWidth
+      ? 1
       : Math.min(
-          gridWidth > itemWidth ? Math.floor(gridWidth / itemWidth) : 1,
+          foundDates?.length <= 3
+            ? foundDates.length
+            : Math.floor(gridWidth / itemWidth),
           4
         )
 
@@ -86,10 +96,10 @@
   let resizeTimeout: NodeJS.Timeout
 
   function updateListHeight() {
+    if (!gridElement) return
+
     clearTimeout(resizeTimeout)
     resizeTimeout = setTimeout(() => {
-      console.log("Resizer")
-
       gridHeight = getListHeight(gridElement)
     }, 16)
   }
@@ -103,13 +113,24 @@
       24
     )
   }
+
+  function focusStartDateInput() {
+    ;(document.querySelector("#startDate input") as HTMLInputElement)?.focus()
+  }
+
+  function focusEndDateInput() {
+    ;(document.querySelector("#endDate input") as HTMLInputElement)?.focus()
+  }
 </script>
 
 <svelte:window on:resize={updateListHeight} />
 
-<div class="_grid-layout grid w-full grow gap-6 pt-40">
+<div
+  class="_grid-layout flex grow flex-col flex-wrap items-center justify-start gap-6 pt-40 md:grid lg:w-full lg:flex-row lg:items-start"
+>
+  <!-- Left side -->
   <!-- Inputs -->
-  <div class="col-start-2 col-end-6 w-full xl:col-end-7">
+  <div class="col-start-2 col-end-6 flex-shrink grow-0 lg:w-full xl:col-end-7">
     <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
       Find a date by its numerological value
     </h1>
@@ -139,25 +160,25 @@
 
       <div class="flex gap-3">
         <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="w-min">
+        <label class="w-min" id="startDate">
           <div class="mb-2 text-lg">Start date</div>
           <div class="_input-76UYgMr93egyAi w-min">
             <DateInput
               bind:value={startDate}
               min={new Date(0)}
-              format="dd.MM.yyyy"
-              placeholder="19.01.2012"
+              format="dd/MM/yyyy"
+              placeholder="19/01/2012"
             />
           </div>
         </label>
         <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="w-min">
+        <label class="w-min" id="endDate">
           <div class="mb-2 text-lg">End date</div>
           <div class="_input-76UYgMr93egyAi w-min">
             <DateInput
               bind:value={endDate}
-              format="dd.MM.yyyy"
-              placeholder="19.01.2023"
+              format="dd/MM/yyyy"
+              placeholder="19/01/2023"
               min={minEndDate}
               max={new Date(3100, 1, 1)}
             />
@@ -170,21 +191,28 @@
   <!-- Right Side -->
   <!-- Dates Display-->
   <div
-    class="col-span-7 col-start-6 mt-14 flex flex-col items-center xl:col-start-7"
+    class="grow-1 col-span-7 col-start-6 mt-14 flex shrink-0 flex-col items-center transition-opacity xl:col-start-7"
+    class:opacity-60={isLoading}
   >
-    {#if isFormValid && foundDates?.length !== 0}
-      <div class="mb-8">
-        <h2 class="mb-1 text-2xl">
-          {#if foundDates}
-            <span class:opacity-60={isLoading} class="transition-opacity"
-              >{`Found ${numberFormatter.format(foundDates.length)} date${
-                foundDates.length === 0 || foundDates.length > 1 ? `s` : ""
-              }`}</span
-            >
-          {:else}
-            {`Fill out the form for results`}
-          {/if}
+    {#if isFormValid}
+      <div class="mb-8 ">
+        <h2 class="mb-2 text-center text-3xl">
+          {`Found ${formatNumber(foundDates.length)} date${
+            foundDates.length === 0 || foundDates.length > 1 ? `s` : ""
+          }`}
         </h2>
+        <p class="text-center">
+          between <button
+            class="inline text-yellow-900"
+            on:click={focusStartDateInput}>{formatDateShort(startDate)}</button
+          >
+          and
+          <button class="inline text-yellow-900" on:click={focusEndDateInput}
+            >{formatDateShort(endDate)}</button
+          >
+          for the lifepath{selectedLifepaths.length > 1 ? "s" : ""}
+          {formatListDisjunction.format(selectedLifepaths.map(String))}.
+        </p>
       </div>
 
       <div
@@ -193,42 +221,46 @@
         bind:clientHeight={gridHeight}
         bind:clientWidth={gridWidth}
         bind:this={gridElement}
-        style:--grid-justification={foundDates?.length > 3 ? "end" : "center"}
+        style:--grid-justification={foundDates?.length > 3 && rowColumns > 1
+          ? "end"
+          : "center"}
         use:useSetListHeight
       >
-        <VirtualList
-          width={gridWidth}
-          height={gridHeight}
-          itemCount={Math.ceil(foundDates.length / rowColumns)}
-          itemSize={itemHeight}
-        >
-          <div slot="item" let:index let:style {style}>
-            <div class="_row" style="--grid-columns: {rowColumns}">
-              {#each Array.from({ length: rowColumns }) as _, indexRowItem}
-                {#if foundDates[index * rowColumns + indexRowItem]}
-                  <div
-                    class="group flex h-10 items-center justify-end gap-3 p-2"
-                    style="width: {itemWidth}px;"
-                    class:even:bg-orange-100={foundDates.length > 2}
-                  >
-                    {dateFormatter.format(
-                      foundDates[index * rowColumns + indexRowItem].date
-                    )}
+        {#if foundDates && foundDates.length > 0 && rowColumns}
+          <VirtualList
+            width={gridWidth}
+            height={gridHeight}
+            itemCount={Math.ceil(foundDates.length / rowColumns)}
+            itemSize={itemHeight}
+          >
+            <div slot="item" let:index let:style {style}>
+              <div class="_row" style="--grid-columns: {rowColumns}">
+                {#each Array.from({ length: rowColumns }) as _, rowItemIndex}
+                  {#if foundDates[index * rowColumns + rowItemIndex]}
+                    <div
+                      class="group flex h-10 items-center justify-end gap-3 p-2"
+                      style="width: {itemWidth}px;"
+                      class:even:bg-orange-100={foundDates.length > 2}
+                    >
+                      {formatDateShort(
+                        foundDates[index * rowColumns + rowItemIndex].date
+                      )}
 
-                    {#if selectedLifepaths.length > 1}
-                      <div
-                        class="-ml-3 flex h-8 w-8 items-center justify-center border-orange-300 text-center text-yellow-900 "
-                      >
-                        <!-- {foundDates[index + indexRowItem].lifePath} -->
-                        {foundDates[index * rowColumns + indexRowItem].lifePath}
-                      </div>
-                    {/if}
-                  </div>
-                {/if}
-              {/each}
+                      {#if selectedLifepaths.length > 1}
+                        <div
+                          class="-ml-3 flex h-8 w-8 items-center justify-center border-orange-300 text-center text-yellow-900 "
+                        >
+                          {foundDates[index * rowColumns + rowItemIndex]
+                            .lifePath}
+                        </div>
+                      {/if}
+                    </div>
+                  {/if}
+                {/each}
+              </div>
             </div>
-          </div>
-        </VirtualList>
+          </VirtualList>
+        {/if}
       </div>
     {:else}
       <div class="w-full max-w-[60ch] text-center">
