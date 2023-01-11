@@ -8,7 +8,7 @@
     "build": "vite build && node Create200Page.js",
     "preview": "vite preview",
     "test": "vitest",
-    "deploy": "surge ./dist numerology-toolbelt.surge.sh"
+    "deploy": "npm run build && surge ./dist numerology-toolbelt.surge.sh"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
