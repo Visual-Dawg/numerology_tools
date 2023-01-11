@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node Create200Page.js",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "deploy": "surge ./dist numerology-toolbelt.surge.sh"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
