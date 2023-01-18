@@ -105,12 +105,13 @@
   }
 
   function getListHeight(list: HTMLElement | undefined) {
-    return (
+    return Math.max(
       window.innerHeight -
-      list.getBoundingClientRect().top -
-      FOOTER_SIZE -
-      // Spacing
-      24
+        list.getBoundingClientRect().top -
+        FOOTER_SIZE -
+        // Spacing
+        24,
+      240
     )
   }
 
