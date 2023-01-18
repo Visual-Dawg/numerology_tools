@@ -12,6 +12,7 @@ export default defineConfig({
       "#types": `${join(__dirname, "types")}/`,
     },
   },
+  build: { minify: true },
 
   // Vitest
   test: { includeSource: ["./src/**/*.ts"] },
