@@ -4,11 +4,18 @@ import { words as toWords } from "fp-ts-std/String"
 import { reduceNumber, sumUpNumbers, sumUpStringedNumbers } from "./Pures"
 import type { ICalculatedName } from "#types/Types"
 
+// prettier-ignore
+export const alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",]
+export const vowels = ["a", "e", "i", "o", "u", "y"] as const
+// prettier-ignore
+export const consonants = ["b","c","d","f","g","j","k","l","m","n","p","q","s","t","v","x","z","h","r","w","y"] as const
 /**
  *  Y is a vowel, when it is preceded by A, E, I, or O and sounds as one sound
  *  For example in Hayde, Doyle or Raymond
  */
 const vowelRegex = /ay|ey|oy|uy|iy|[aeiou]/gi
+
+const consonantRegex = /[^\sa-z]/gi
 
 /**
  *
@@ -68,7 +75,7 @@ function filterVowels(string: string): string {
  * @example "Arr Foo Bar" => "rr F Br"
  */
 function filterConsonants(string: string): string {
-  return string.replace(vowelRegex, "").replace(/[^\sa-z]/gi, "")
+  return string.replace(vowelRegex, "").replace(consonantRegex, "")
 }
 
 /**
