@@ -5,7 +5,6 @@
   import { calculateName } from "#/lib/NameCalculations"
   import { calculateMaturity } from "#/lib/Pures"
   import { DateInput } from "date-picker-svelte"
-  import ColoredBackground from "../atoms/ColoredBackground.svelte"
 
   let birthdate: Date
   let name: string
@@ -18,37 +17,35 @@
       : undefined
 </script>
 
-<!-- grid-cols-12 grid-rows-1 -->
 <div
-  class="_grid-layout flex h-full w-full grow flex-col flex-wrap items-center justify-start gap-10 pt-40 md:grid md:flex-row md:items-start lg:gap-6"
+  class="flex h-full min-h-full w-full grow flex-col items-center justify-between gap-10 lg:flex-row lg:items-start lg:gap-6"
 >
   <!-- Left side -->
   <!-- Inputs -->
-  <div
-    class="col-start-2 col-end-6 max-h-min max-w-min lg:max-w-max  xl:col-end-7"
-  >
-    <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
-      Calculate numerological numbers
+  <div class="_left_wrapper">
+    <h1 class="mb-8  max-w-[15ch] text-4xl tracking-normal text-amber-900">
+      Calculate your numbers
     </h1>
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
+      <div class="text-base">Input your data</div>
       <TextInput
         name="Full Name"
+        hasLabel={false}
         bind:value={name}
-        maxWidth="20rem"
-        placeholder="Your name"
+        maxWidth="16rem"
+        placeholder="Add your name"
       />
 
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label class="w-min">
-        <div class="mb-2 text-lg">Birthdate</div>
-
         <div class="w-min">
           <DateInput
             bind:value={birthdate}
             min={new Date(0)}
             format="yyyy-MM-dd"
-            placeholder="1999-01-19"
+            placeholder="Add your birthdate"
+            --date-picker-width="16rem"
           />
         </div>
       </label>
@@ -57,49 +54,59 @@
 
   <!-- Right side -->
   <!-- Numbers Display-->
-  <div class="col-span-4 col-start-6 mt-14 md:col-span-6 md:col-start-7">
-    <div class="mb-8">
-      <div class="mb-1 text-sm">Name numbers</div>
-      <div class="grid max-w-xs grid-cols-2 gap-4">
-        <Number name="Expresison" number={nameNumbers?.expression} />
+  <div class="_right_wrapper justify-center">
+    <div class="flex w-max flex-col">
+      <h2 class="mb-4 text-2xl text-amber-900">Results</h2>
+      <div class="mb-8">
+        <div class="mb-1 text-2xs uppercase tracking-wider">Name numbers</div>
         <Number
-          name="Soul Urge"
-          number={nameNumbers?.soulUrge}
-          onUncalculatedMessage="Name needs vowels for this number to be calculated"
+          name="Expresison"
+          number={nameNumbers?.expression}
+          isLarge
+          wrapperClasses="mb-3"
         />
+        <div class="grid grid-cols-2 gap-4">
+          <Number
+            name="Soul Urge"
+            number={nameNumbers?.soulUrge}
+            onUncalculatedMessage="Name needs vowels for this number to be calculated"
+          />
+          <Number
+            name="Personality"
+            number={nameNumbers?.personality}
+            onUncalculatedMessage="The name needs consonants for this number to be calculated"
+          />
+        </div>
+      </div>
+      <div class="">
+        <div class="mb-1 text-2xs uppercase tracking-wider">
+          Birth date numbers
+        </div>
         <Number
-          name="Personality"
-          number={nameNumbers?.personality}
-          onUncalculatedMessage="The name needs consonants for this number to be calculated"
+          name="Life Path"
+          number={dateNumbers?.lifePath}
+          isLarge
+          wrapperClasses="mb-3"
+        />
+        <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+          <Number name="Attitude" number={dateNumbers?.attitude} />
+          <Number name="Generation" number={dateNumbers?.generation} />
+          <Number name="Day of birth" number={dateNumbers?.dayOfBirth} />
+        </div>
+      </div>
+      <div class="mt-6">
+        <div class="mb-1 text-2xs uppercase tracking-wider">
+          Compound number
+        </div>
+        <Number
+          name="Maturity"
+          number={maturity}
+          onUncalculatedMessage="The name and birthdate need to be specified"
         />
       </div>
-    </div>
-
-    <div class="">
-      <div class="mb-1 text-sm">Birth date numbers</div>
-      <div class="grid max-w-xs grid-cols-2 gap-4">
-        <Number name="Life Path" number={dateNumbers?.lifePath} />
-        <Number name="Attitude" number={dateNumbers?.attitude} />
-        <Number name="Generation" number={dateNumbers?.generation} />
-        <Number name="Day of birth" number={dateNumbers?.dayOfBirth} />
-      </div>
-    </div>
-
-    <div class="mt-6">
-      <Number
-        name="Maturity"
-        number={maturity}
-        onUncalculatedMessage="The name and birthdate need to be specified"
-      />
     </div>
   </div>
 </div>
 
-<ColoredBackground />
-
 <style lang="postcss">
-  ._grid-layout {
-    grid-template-rows: repeat(1, 1fr);
-    grid-template-columns: repeat(12, 1fr);
-  }
 </style>

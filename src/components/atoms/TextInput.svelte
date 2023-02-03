@@ -1,13 +1,16 @@
 <script lang="ts">
+  import clsx from "clsx"
+
   export let name: string
   export let id: string | undefined = undefined
   export let value: string | undefined = undefined
   export let placeholder: string | undefined = undefined
   export let maxWidth = "100%"
+  export let hasLabel = true
 </script>
 
 <label class="pointer flex flex-col gap-2 rounded-none text-lg">
-  {name}
+  <span class={clsx(!hasLabel && "hidden")}>{name}</span>
 
   <input
     type="text"
@@ -16,9 +19,9 @@
     {placeholder}
     bind:value
     class="
-      _shadow h-10 border-2 border-solid border-stone-500
-      bg-stone-100 px-2 transition-shadow
-      focus:border-amber-800 focus:outline-none
+      _shadow h-10 rounded-sm border-2 border-solid border-stone-400
+      bg-stone-100 px-2 text-base shadow shadow-amber-900/25
+      transition-shadow placeholder:text-stone-400 focus:border-black focus:outline-none
       "
     style={`max-width: ${maxWidth}`}
   />
@@ -26,10 +29,8 @@
 
 <style lang="postcss">
   ._shadow {
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
-
     &:focus {
-      box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 4px 4px 0px theme(colors.amber.900 / 10%);
     }
   }
 </style>

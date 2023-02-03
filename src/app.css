@@ -6,10 +6,9 @@
 **			Font 
 **=================================================================*/
 @font-face {
-  font-family: "Lora";
+  font-family: "Domine";
   font-weight: 100 900;
-  src: url("./src/assets/Lora-VariableFont_wght.ttf")
-    format("truetype-variations");
+  src: url("./src/assets/Domine-Regular.ttf") format("truetype-variations");
 }
 
 ::selection {
@@ -21,12 +20,12 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-stone-900/5; /* color of the tracking area */
+  @apply rounded-full bg-amber-900/10; /* color of the tracking area */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: theme(colors.stone.400); /* color of the scroll thumb */
-  border-radius: 0px; /* roundness of the scroll thumb */
+  background-color: theme(colors.orange.400); /* color of the scroll thumb */
+  border-radius: 999px; /* roundness of the scroll thumb */
 }
 
 h1,
@@ -39,17 +38,16 @@ h5 {
   }
 }
 
-body {
-  @apply bg-stone-100 font-serif text-stone-800;
+html {
+  @apply bg-gradient-to-b  from-amber-200 to-red-100 font-serif text-black;
 }
 
 /* Override date picker styling */
 .date-time-field {
   .date-time-picker {
-    border-radius: 0px !important;
-    border: 1px solid theme(colors.stone.400) !important;
-    @apply shadow-md shadow-orange-900/10 !important;
-    box-shadow: 8px 8px 0px black;
+    border-radius: 2px !important;
+    border: 1px solid theme(colors.black) !important;
+    @apply shadow-md shadow-amber-900/10 !important;
   }
 
   select,
@@ -61,15 +59,18 @@ body {
 
   input[type="text"] {
     transition: box-shadow 0.2s ease-in-out;
-    border-radius: 0px !important;
-    border: 2px solid theme(colors.stone.500) !important;
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 2px !important;
+    border: 2px solid theme(colors.stone.400) !important;
+    box-shadow: 2px 2px 0px theme(colors.amber.900 / 25%) !important;
     height: 2.5rem;
     background-color: theme(colors.stone.100) !important;
+    min-width: var(--date-picker-width, 20rem);
+
+    @apply text-base;
 
     &:focus {
-      border-color: theme(colors.amber.800) !important;
-      box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2) !important;
+      border-color: theme(colors.black) !important;
+      box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1) !important;
     }
 
     &::placeholder {
@@ -80,9 +81,9 @@ body {
 
 :root {
   --date-picker-foreground: theme(colors.stone.800);
-  --date-picker-background: theme(colors.amber.100);
+  --date-picker-background: theme(colors.stone.100);
   --date-picker-selected-background: theme(colors.stone.50);
-  --date-picker-highlight-border: theme(colors.stone.900);
+  --date-picker-highlight-border: theme(colors.stone.400);
   --date-picker-highlight-shadow: "none";
 }
 
@@ -95,4 +96,17 @@ body {
 
 .tippy-content {
   font-size: 0.875rem;
+}
+
+._right_wrapper {
+  @apply flex h-full min-h-full grow rounded-3xl bg-amber-50 pt-16;
+  flex: 0 2 37.75rem;
+  box-shadow: inset -4px -4px 0 0 theme(colors.amber.600 / 60%),
+    inset -8px -8px 0 0 theme(colors.amber.500 / 50%),
+    inset 24px 24px 56px 0 rgba(255, 255, 255, 0.8);
+}
+
+._left_wrapper {
+  @apply ml-16 mt-16 max-h-min max-w-[19rem];
+  flex: 0 1 26.5rem;
 }

@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { FOOTER_SIZE, NUMBERS } from "#/lib/Consts"
+  import { NUMBERS } from "#/lib/Consts"
   import hexoid from "hexoid"
   import type { ICalculatedDate, IFindDateArgument } from "#types/Types"
   import { add } from "date-fns"
   import { DateInput } from "date-picker-svelte"
-  import ColoredBackground from "../atoms/ColoredBackground.svelte"
   import { isFindDateResult } from "./DateFinderHelper"
   import VirtualList from "svelte-tiny-virtual-list"
   import {
@@ -19,8 +18,8 @@
   const createUID = hexoid()
 
   let startDate: Date | undefined = new Date()
-  let endDate: Date | undefined = add(startDate, { weeks: 1 })
-  let selectedLifepaths: number[] = []
+  let endDate: Date | undefined = add(startDate, { weeks: 100 })
+  let selectedLifepaths: number[] = [8, 9]
 
   let foundDates: readonly ICalculatedDate[] | undefined = undefined
 
@@ -83,10 +82,10 @@
         )
 
   function useSetListHeight(list: HTMLElement) {
-    // Do not instantly update, bc it does not work otherwise
+    // Do not instantly update, bc it does not work otherwise, for some reason
     const timeout = setTimeout(() => {
       gridHeight = getListHeight(list)
-    }, 1)
+    }, 2)
 
     return {
       destroy: () => clearTimeout(timeout),
@@ -104,15 +103,8 @@
     }, 16)
   }
 
-  function getListHeight(list: HTMLElement | undefined) {
-    return Math.max(
-      window.innerHeight -
-        list.getBoundingClientRect().top -
-        FOOTER_SIZE -
-        // Spacing
-        24,
-      240
-    )
+  function getListHeight(_list: HTMLElement | undefined) {
+    return gridElement.getBoundingClientRect().height
   }
 
   function focusStartDateInput() {
@@ -126,164 +118,136 @@
 
 <svelte:window on:resize={updateListHeight} />
 
-<div
-  class="_grid-layout flex grow flex-col flex-wrap items-center justify-start gap-6 pt-40 md:grid lg:w-full lg:flex-row lg:items-start"
->
-  <!-- Left side -->
-  <!-- Inputs -->
-  <div class="col-start-2 col-end-6 flex-shrink grow-0 lg:w-full xl:col-end-7">
-    <h1 class="mb-8  max-w-[15ch] text-3xl xl:text-5xl ">
-      Find a date by its numerological value
-    </h1>
+<!-- Left side -->
+<!-- Inputs -->
+<div class="_left_wrapper">
+  <h1 class="mb-8  max-w-[15ch] text-4xl ">Find dates by lifepath</h1>
 
-    <div class="flex flex-col gap-6">
-      <div class="">
-        <div class="mb-1">Lifepath</div>
-        <div class="grid max-w-max grid-flow-row grid-cols-4 gap-3">
-          {#each NUMBERS as number}
-            <label class="h-10 w-10 appearance-none">
-              <input
-                type="checkbox"
-                name={String(number)}
-                value={number}
-                bind:group={selectedLifepaths}
-                class="peer absolute h-0 w-0 appearance-none"
-              />
-              <div
-                class="solid flex h-10 w-10 items-center justify-center border-2 border-stone-500 bg-transparent text-lg peer-checked:border-0 peer-checked:bg-orange-600 peer-checked:text-white"
-              >
-                {number}
-              </div>
-            </label>
-          {/each}
-        </div>
-      </div>
-
-      <div class="flex gap-3">
-        <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="w-min" id="startDate">
-          <div class="mb-2 text-lg">Start date</div>
-          <div class="_input-76UYgMr93egyAi w-min">
-            <DateInput
-              bind:value={startDate}
-              min={new Date(0)}
-              format="dd/MM/yyyy"
-              placeholder="19/01/2012"
+  <div class="flex flex-col gap-6">
+    <div class="">
+      <div class="mb-1">Choose the desired lifepath(s)</div>
+      <div class="grid max-w-max grid-flow-row grid-cols-4 gap-3">
+        {#each NUMBERS as number}
+          <label class="h-8 w-8 appearance-none">
+            <input
+              type="checkbox"
+              name={String(number)}
+              value={number}
+              bind:group={selectedLifepaths}
+              class="peer absolute h-0 w-0 appearance-none"
             />
-          </div>
-        </label>
-        <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="w-min" id="endDate">
-          <div class="mb-2 text-lg">End date</div>
-          <div class="_input-76UYgMr93egyAi w-min">
-            <DateInput
-              bind:value={endDate}
-              format="dd/MM/yyyy"
-              placeholder="19/01/2023"
-              min={minEndDate}
-              max={new Date(3100, 1, 1)}
-            />
-          </div>
-        </label>
+            <div
+              class="solid flex h-8 w-8 items-center justify-center rounded-xl bg-yellow-50 text-base shadow shadow-amber-900/20 peer-checked:border-0 peer-checked:bg-orange-600 peer-checked:text-white"
+            >
+              {number}
+            </div>
+          </label>
+        {/each}
       </div>
     </div>
-  </div>
 
-  <!-- Right Side -->
-  <!-- Dates Display-->
-  <div
-    class="grow-1 col-span-7 col-start-6 mt-14 flex shrink-0 flex-col items-center transition-opacity xl:col-start-7"
-    class:opacity-60={isLoading}
-  >
-    {#if isFormValid}
-      <div class="mb-8 ">
-        <h2 class="mb-2 text-center text-3xl">
-          {`Found ${formatNumber(foundDates.length)} date${
-            foundDates.length === 0 || foundDates.length > 1 ? `s` : ""
-          }`}
-        </h2>
-        <p class="text-center">
-          between <button
-            class="inline text-yellow-900"
-            on:click={focusStartDateInput}>{formatDateShort(startDate)}</button
-          >
-          and
-          <button class="inline text-yellow-900" on:click={focusEndDateInput}
-            >{formatDateShort(endDate)}</button
-          >
-          for the lifepath{selectedLifepaths.length > 1 ? "s" : ""}
-          {formatListDisjunction.format(selectedLifepaths.map(String))}.
-        </p>
-      </div>
+    <div class="flex gap-3">
+      <DateInput
+        bind:value={startDate}
+        min={new Date(0)}
+        format="dd/MM/yyyy"
+        placeholder="19/01/2012"
+        --date-picker-width="2.5rem"
+      />
 
-      <div
-        class="w-full transition-opacity"
-        class:opacity-40={isLoading}
-        bind:clientHeight={gridHeight}
-        bind:clientWidth={gridWidth}
-        bind:this={gridElement}
-        style:--grid-justification={foundDates?.length > 3 && rowColumns > 1
-          ? "end"
-          : "center"}
-        use:useSetListHeight
-      >
-        {#if foundDates && foundDates.length > 0 && rowColumns}
-          <VirtualList
-            width={gridWidth}
-            height={gridHeight}
-            itemCount={Math.ceil(foundDates.length / rowColumns)}
-            itemSize={itemHeight}
-          >
-            <div slot="item" let:index let:style {style}>
-              <div class="_row" style="--grid-columns: {rowColumns}">
-                {#each Array.from({ length: rowColumns }) as _, rowItemIndex}
-                  {#if foundDates[index * rowColumns + rowItemIndex]}
-                    <div
-                      class="group flex h-10 items-center justify-end gap-3 p-2"
-                      style="width: {itemWidth}px;"
-                      class:even:bg-orange-100={foundDates.length > 2}
-                    >
-                      {formatDateShort(
-                        foundDates[index * rowColumns + rowItemIndex].date
-                      )}
-
-                      {#if selectedLifepaths.length > 1}
-                        <div
-                          class="-ml-3 flex h-8 w-8 items-center justify-center border-orange-300 text-center text-yellow-900 "
-                        >
-                          {foundDates[index * rowColumns + rowItemIndex]
-                            .lifePath}
-                        </div>
-                      {/if}
-                    </div>
-                  {/if}
-                {/each}
-              </div>
-            </div>
-          </VirtualList>
-        {/if}
-      </div>
-    {:else}
-      <div class="w-full max-w-[60ch] text-center">
-        Select from the options to find dates by their numerological value
-      </div>
-    {/if}
+      <DateInput
+        bind:value={endDate}
+        format="dd/MM/yyyy"
+        placeholder="19/01/2023"
+        min={minEndDate}
+        max={new Date(3100, 1, 1)}
+        --date-picker-width="2.5rem"
+      />
+    </div>
   </div>
 </div>
 
-<ColoredBackground />
+<!-- Right Side -->
+<!-- Dates Display-->
+<div
+  class="_right_wrapper flex flex-col items-center justify-start px-2 pb-16"
+  class:opacity-60={isLoading}
+>
+  {#if isFormValid}
+    <div class="mb-8 flex flex-col items-center">
+      <h2 class="mb-2 text-center text-3xl">
+        {`Found ${formatNumber(foundDates.length)} date${
+          foundDates.length === 0 || foundDates.length > 1 ? `s` : ""
+        }`}
+      </h2>
+      <p class="text-center">
+        between <button
+          class="inline text-yellow-900"
+          on:click={focusStartDateInput}>{formatDateShort(startDate)}</button
+        >
+        and
+        <button class="inline text-yellow-900" on:click={focusEndDateInput}
+          >{formatDateShort(endDate)}</button
+        >
+        for the lifepath{selectedLifepaths.length > 1 ? "s" : ""}
+        {formatListDisjunction.format(selectedLifepaths.map(String))}.
+      </p>
+    </div>
+
+    <div
+      class="h-full w-full transition-opacity"
+      class:opacity-40={isLoading}
+      bind:clientHeight={gridHeight}
+      bind:clientWidth={gridWidth}
+      bind:this={gridElement}
+      style:--grid-justification={foundDates?.length > 3 && rowColumns > 1
+        ? "end"
+        : "center"}
+      use:useSetListHeight
+    >
+      {#if foundDates && foundDates.length > 0 && rowColumns}
+        <VirtualList
+          width={gridWidth}
+          height={gridHeight}
+          itemCount={Math.ceil(foundDates.length / rowColumns)}
+          itemSize={itemHeight}
+        >
+          <div slot="item" let:index let:style {style}>
+            <div class="_row" style="--grid-columns: {rowColumns}">
+              {#each Array.from({ length: rowColumns }) as _, rowItemIndex}
+                {#if foundDates[index * rowColumns + rowItemIndex]}
+                  <div
+                    class="group flex h-10 items-center justify-end gap-3 p-2"
+                    style="width: {itemWidth}px;"
+                    class:even:bg-orange-100={foundDates.length > 2}
+                  >
+                    {formatDateShort(
+                      foundDates[index * rowColumns + rowItemIndex].date
+                    )}
+
+                    {#if selectedLifepaths.length > 1}
+                      <div
+                        class="-ml-3 flex h-8 w-8 items-center justify-center border-orange-300 text-center text-yellow-900 "
+                      >
+                        {foundDates[index * rowColumns + rowItemIndex].lifePath}
+                      </div>
+                    {/if}
+                  </div>
+                {/if}
+              {/each}
+            </div>
+          </div>
+        </VirtualList>
+      {/if}
+    </div>
+  {:else}
+    <div class="w-full max-w-[60ch] text-center">
+      Select from the options to find dates by their numerological value
+    </div>
+  {/if}
+</div>
 
 <style lang="postcss">
-  ._grid-layout {
-    grid-template-rows: repeat(1, 1fr);
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  /* Overwrite date inputs */
-  :global(._input-76UYgMr93egyAi .date-time-field input[type="text"]) {
-    width: 116px;
-  }
-
   ._row {
     display: grid;
     gap: 8px;

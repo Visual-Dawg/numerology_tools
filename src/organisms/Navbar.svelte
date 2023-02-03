@@ -7,7 +7,7 @@
   class="fixed inset-0 flex h-[128px] w-screen items-center justify-center py-2 px-6"
 >
   <div
-    class="flex w-[748px] items-center justify-between rounded-full bg-amber-50 px-6 py-2 shadow"
+    class="flex w-[748px] items-center justify-between rounded-full bg-amber-50 px-6 py-2 shadow-md shadow-amber-900/10"
   >
     <div class="text-sm md:text-lg">
       <Link to="/"
@@ -21,7 +21,7 @@
       >
     </div>
 
-    <ul class="flex gap-4 text-sm font-bold md:flex-row">
+    <ul class="flex gap-4 text-sm md:flex-row">
       <li class="hover:text-orange-700">
         <Link to="/">Numbers Calculation</Link>
       </li>
