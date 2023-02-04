@@ -38,8 +38,9 @@ h5 {
   }
 }
 
-html {
-  @apply bg-gradient-to-b  from-amber-200 to-red-100 font-serif text-black;
+html,
+body {
+  @apply bg-amber-200  bg-gradient-to-b from-amber-200 to-red-100 font-serif text-black;
 }
 
 /* Override date picker styling */
@@ -99,7 +100,7 @@ html {
 }
 
 ._right_wrapper {
-  @apply flex h-full min-h-full grow rounded-3xl bg-amber-50 pt-16;
+  @apply flex h-full min-h-full w-full grow rounded-3xl bg-amber-50 pt-16;
   flex: 0 2 37.75rem;
   box-shadow: inset -4px -4px 0 0 theme(colors.amber.600 / 60%),
     inset -8px -8px 0 0 theme(colors.amber.500 / 50%),

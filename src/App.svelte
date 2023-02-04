@@ -11,7 +11,7 @@
   <Router>
     <Navbar />
     <div
-      class="mx-auto flex  h-[calc(max(calc(100vh),640px))]  max-w-[100rem] flex-col items-center px-6 pt-36"
+      class="mx-auto flex  h-[calc(max(calc(100vh),640px))]  max-w-[100rem] flex-col items-center px-6 pt-20 lg:pt-36"
     >
       <div class="_wrapper rounded-3xl bg-orange-100">
         <div

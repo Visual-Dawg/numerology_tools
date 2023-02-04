@@ -1,10 +1,19 @@
 <script lang="ts">
   import { ROUTES } from "#/lib/Routes"
   import { Link } from "svelte-navigator"
+  import { slide } from "svelte/transition"
+
+  import BarsIcon from "virtual:icons/uil/bars"
+
+  let isDropDownActive = false
+
+  function toggleDropDown() {
+    isDropDownActive = !isDropDownActive
+  }
 </script>
 
 <nav
-  class="fixed inset-0 flex h-[128px] w-screen items-center justify-center py-2 px-6"
+  class="fixed top-0 flex w-screen items-center justify-center py-2 px-6 lg:inset-0 lg:h-[128px]"
 >
   <div
     class="flex w-[748px] items-center justify-between rounded-full bg-amber-50 px-6 py-2 shadow-md shadow-amber-900/10"
@@ -21,7 +30,8 @@
       >
     </div>
 
-    <ul class="flex gap-4 text-sm md:flex-row">
+    <!-- Desktop & Tablet-->
+    <ul class="hidden gap-4 text-sm sm:visible sm:flex">
       <li class="hover:text-orange-700">
         <Link to="/">Numbers Calculation</Link>
       </li>
@@ -29,5 +39,25 @@
         <Link to={ROUTES.dateFinder}>Date Finder</Link>
       </li>
     </ul>
+
+    <!-- Mobile-->
+    <div class="relative sm:hidden">
+      <button class="h-8 w-8 p-1" on:click={toggleDropDown}><BarsIcon /></button
+      >
+
+      {#if isDropDownActive}
+        <ul
+          class="absolute right-0 flex min-w-max flex-col gap-4 rounded-xl bg-amber-50 p-3 text-sm shadow-lg shadow-amber-900/10"
+          transition:slide={{ duration: 120 }}
+        >
+          <li class="hover:text-orange-700">
+            <Link to="/">Numbers Calculation</Link>
+          </li>
+          <li class="hover:text-orange-700">
+            <Link to={ROUTES.dateFinder}>Date Finder</Link>
+          </li>
+        </ul>
+      {/if}
+    </div>
   </div>
 </nav>

@@ -17,13 +17,15 @@
   })
   const createUID = hexoid()
 
-  let startDate: Date | undefined = new Date()
-  let endDate: Date | undefined = add(startDate, { weeks: 100 })
-  let selectedLifepaths: number[] = [8, 9]
+  let startDate: Date | undefined = undefined
+  let endDate: Date | undefined = undefined
+  let selectedLifepaths: number[] = []
 
   let foundDates: readonly ICalculatedDate[] | undefined = undefined
 
-  let minEndDate: Date = add(startDate, { days: 1 })
+  let minEndDate: Date = startDate
+    ? add(startDate, { days: 1 })
+    : new Date(9999)
 
   $: isFormValid =
     startDate &&
@@ -146,22 +148,22 @@
       </div>
     </div>
 
-    <div class="flex gap-3">
+    <div class="flex flex-wrap gap-3">
       <DateInput
         bind:value={startDate}
         min={new Date(0)}
         format="dd/MM/yyyy"
-        placeholder="19/01/2012"
-        --date-picker-width="2.5rem"
+        placeholder="Start date"
+        --date-picker-width="2rem"
       />
 
       <DateInput
         bind:value={endDate}
         format="dd/MM/yyyy"
-        placeholder="19/01/2023"
+        placeholder="End date"
         min={minEndDate}
         max={new Date(3100, 1, 1)}
-        --date-picker-width="2.5rem"
+        --date-picker-width="2rem"
       />
     </div>
   </div>
